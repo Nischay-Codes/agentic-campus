@@ -1,82 +1,252 @@
-# Agentic-Campus: Safety-Constrained Autonomous Infrastructure Remediation
+# Agentic-Campus
 
-[![Google Cloud](https://img.shields.io/badge/Google_Cloud-Load--Bearing-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)](https://cloud.google.com)
-[![Gemini 2.0](https://img.shields.io/badge/Gemini_2.0-Function_Calling-8E75B2?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev)
-[![Cloud Run](https://img.shields.io/badge/Cloud_Run-Serverless-34A853?style=for-the-badge&logo=google-cloud&logoColor=white)](https://cloud.google.com/run)
-[![Hackathon Submission](https://img.shields.io/badge/GeeksforGeeks-Hack_Sprint_2026-008A00?style=for-the-badge)](https://geeksforgeeks.org)
+> **A safety-constrained autonomous infrastructure agent that detects failures, reasons about remediation, executes only approved actions, verifies real application recovery, and remembers verified solutions.**
 
-> **GeeksforGeeks x Google Cloud Hack Sprint Submission**  
-> **Track:** Open Innovation / Smart Campus  
-> **Target Institution:** Shri Shankaracharya Technical Campus, Bhilai  
+**Live Demo:** https://agentic-campus.vercel.app/
+**GitHub:** https://github.com/Nischay-Codes/agentic-campus
 
 ---
 
-## 📌 Problem Statement
+## ◆ What Is Agentic-Campus?
 
-Campus web portals, grading microservices, and student enrollment systems regularly experience unexpected outages (HTTP 500 crashes, bad revision deployments, connection pool locks, or silent white-screen renders) during peak registration windows.
+Agentic-Campus explores how AI agents can autonomously remediate infrastructure failures **without giving the AI unrestricted control**.
 
-Current monitoring tools only send alerts—they do **not** repair infrastructure. Manual IT debugging takes time, causing student delays. **Agentic-Campus** bridges this gap by deploying an autonomous, safety-constrained closed-loop agent that executes a **Detect → Plan → Safety Policy Gate → Act → Verify → Memory** lifecycle to remediate failures in a simulated sandbox.
+The core principle is:
 
----
+> **AI provides reasoning. Deterministic systems provide authority. The application provides proof of recovery.**
 
-## ⚡ 5-Line Quick Setup
+### Core Loop
 
-```bash
-# 1. Clone repository
-git clone https://github.com/nischay/agentic-campus.git
-cd agentic-campus
-
-# 2. Install dependencies & run backend
-pip install fastapi uvicorn requests pydantic google-genai beautifulsoup4
-python3 -m uvicorn backend.app:app --port 8000 --host 0.0.0.0
-# Open http://localhost:8000/docs for API docs or http://localhost:8080 for UI
+```text
+DETECT → REASON → CONSTRAIN → ACT → VERIFY → REMEMBER
 ```
 
 ---
 
-## 🛠️ Google Cloud Stack (Load-Bearing Architecture)
+## ◆ How It Works
 
-- **Gemini 2.0 API (`google-genai` SDK)**: Core reasoning engine utilizing typed **Function Calling** to select remediation tools (`rollback_revision`, `restart_service`, `scale_service`) and **Multimodal Vision** for screenshot UI verification.
-- **Google Cloud Run**: Serverless container execution platform hosting target microservices and executing immutable revision traffic rollbacks.
-- **Firebase Realtime Database**: Real-time event bus streaming agent thoughts, policy decisions, and incident states to the dashboard.
-- **Google BigQuery**: Verified incident memory store (`BigQueryIncidentMemory`) that archives past successful resolutions for similarity lookup.
-
----
-
-## 🔄 Closed-Loop Remediation Lifecycle
-
+```text
+┌─────────────────────┐
+│   Incident / Fault  │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│      Gemini AI      │
+│  Reason + Diagnose  │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│    Policy Gate      │
+│ Validate & Authorize│
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│     Cloud Run       │
+│ Execute Remediation │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│ Browser / DOM Check │
+│ Verify Real Recovery│
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│      BigQuery       │
+│ Verified Experience │
+└─────────────────────┘
 ```
-[OUTAGE DETECTED] ──> 1. PLAN (Gemini 2.0 Tool Selection)
-                            │
-                            ▼
-                      2. POLICY GATE (Deterministic Safety Check)
-                            │
-                            ▼
-                      3. ACT (Cloud Run Revision Rollback)
-                            │
-                            ▼
-                      4. VERIFY (Visual DOM & Screenshot Assertions)
-                            │
-                            ▼
-                      5. MEMORY (Store Verified Resolution in BigQuery)
+
+---
+
+## ◆ Key Features
+
+**◈ Constrained Autonomy**
+Gemini operates through predefined tools instead of unrestricted shell access.
+
+**◈ Deterministic Safety Gate**
+Every proposed action is checked for:
+
+* Allowed action
+* Valid target
+* Valid parameters
+* Valid revision
+* Safety constraints
+
+**◈ Application-Level Verification**
+The system doesn't assume:
+
+```text
+Command succeeded = Application recovered
+```
+
+It verifies HTTP state, DOM elements, UI content, and error states.
+
+**◈ Verified Memory**
+Only successfully executed and independently verified remediations are stored for future incidents.
+
+---
+
+## ◆ Example Incident
+
+A deployment can produce:
+
+```text
+Server Running
+      ↓
+HTTP 200
+      ↓
+Frontend JavaScript Failure
+      ↓
+Blank / Broken UI
+```
+
+A normal health check may say **HEALTHY**, while users see a broken application.
+
+Agentic-Campus detects the difference between:
+
+```text
+SERVER AVAILABILITY ≠ APPLICATION USABILITY
 ```
 
 ---
 
-## 📊 Measured Sandbox Performance Metrics
+## ◆ Remediation Tools
 
-Across simulated fault injection runs, Agentic-Campus measured the following sandbox execution breakdown:
+```text
+get_logs()
+health_check()
+rollback_revision()
+restart_service()
+scale_service()
+```
 
-- **Detection Latency:** ~0.002s (DOM & HTTP check)
-- **Policy Gate Check:** ~0.001s (Deterministic whitelist validation)
-- **Verification Check:** ~0.003s (DOM assertion inspection)
-- **Total Measured Sandbox MTTR:** **~1.8s - 3.2s** *(Includes network & rendering overhead)*
+Gemini can **propose** an operation, but the policy engine decides whether it can actually execute.
+
+> **The model can propose an action, but it cannot grant itself permission.**
 
 ---
 
-## 📜 Submission Deliverables
+## ◆ Technology Stack
 
-- **Working Prototype:** Interactive FastAPI Backend + Glassmorphic Command Center Dashboard (`http://localhost:8080`).
-- **8-Slide Pitch Deck:** Available in `presentation_deck.md` or as exported PDF.
-- **90-Second Demo Video Script:** Rehearsed backup video walkthrough in `presentation_deck.md`.
-# agentic-campus
+| Layer            | Technology                 |
+| ---------------- | -------------------------- |
+| ◆ Reasoning      | Gemini API                 |
+| ◆ Infrastructure | Google Cloud Run           |
+| ◆ Live State     | Firebase Realtime Database |
+| ◆ Memory         | Google BigQuery            |
+| ◆ Backend        | FastAPI                    |
+| ◆ Verification   | Browser / DOM              |
+| ◆ Frontend       | Web Command Center         |
+| ◆ Deployment     | Vercel                     |
+
+---
+
+## ◆ Evaluation
+
+The prototype can be evaluated using controlled fault injection:
+
+* **Remediation Success Rate**
+* **Safety Enforcement**
+* **Failure Detection**
+* **Recovery Latency**
+* **Verified Memory Effect**
+
+### Sandbox Measurements
+
+| Metric          | Approx. Value |
+| --------------- | ------------: |
+| Detection       |      ~0.002 s |
+| Policy Check    |      ~0.001 s |
+| Verification    |      ~0.003 s |
+| End-to-End MTTR |    ~1.8–3.2 s |
+
+> These are sandbox measurements, not production guarantees.
+
+---
+
+## ◆ Research Contribution
+
+Agentic-Campus combines:
+
+```text
+AI Reasoning
+      +
+Deterministic Authorization
+      +
+Real Infrastructure Execution
+      +
+Application-Level Verification
+      +
+Verified Operational Memory
+```
+
+The central research idea:
+
+> **Autonomous does not have to mean unrestricted.**
+
+---
+
+## ◆ Demo Flow
+
+1. ◆ Trigger/observe an incident
+2. ◆ Gemini analyzes the failure
+3. ◆ Gemini proposes remediation
+4. ◆ Policy gate validates the action
+5. ◆ Cloud Run executes it
+6. ◆ Browser/DOM verifies recovery
+7. ◆ Verified result is stored in memory
+
+```text
+INCIDENT
+   ↓
+REASONING
+   ↓
+AUTHORIZED ACTION
+   ↓
+INFRASTRUCTURE CHANGE
+   ↓
+APPLICATION VERIFICATION
+   ↓
+VERIFIED RECOVERY
+   ↓
+REUSABLE EXPERIENCE
+```
+
+---
+
+## ◆ Security
+
+Agentic-Campus is an experimental prototype.
+
+Recommended safeguards include:
+
+* Least-privilege cloud identities
+* Explicitly allowed remediation tools
+* No unrestricted shell access
+* Target validation
+* Audit logging
+* Production isolation
+* Human approval for high-risk operations
+
+---
+
+## ◆ Future Work
+
+**◇ Multi-service dependency reasoning**
+**◇ Multi-step verified remediation**
+**◇ Risk-aware authorization**
+**◇ Larger infrastructure failure benchmark**
+**◇ Continual evaluation and learning**
+
+---
+
+## ◆ Links
+
+**Live:** https://agentic-campus.vercel.app/
+**Source:** https://github.com/Nischay-Codes/agentic-campus
+
+---
+
+### Agentic-Campus
+
+**Detect. Reason. Constrain. Act. Verify. Learn.**
