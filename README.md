@@ -79,3 +79,4 @@ Across simulated fault injection runs, Agentic-Campus measured the following san
 - **Working Prototype:** Interactive FastAPI Backend + Glassmorphic Command Center Dashboard (`http://localhost:8080`).
 - **8-Slide Pitch Deck:** Available in `presentation_deck.md` or as exported PDF.
 - **90-Second Demo Video Script:** Rehearsed backup video walkthrough in `presentation_deck.md`.
+# agentic-campus
