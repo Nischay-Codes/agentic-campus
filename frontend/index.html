@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic-Campus | Command Center UI</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-box">
+      <div class="logo-icon">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div class="logo-title">
+        <h1>Agentic-Campus</h1>
+        <p>Google Cloud Hack Sprint</p>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li class="nav-item active">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>Command Center</span>
+      </li>
+      <li class="nav-item" onclick="openPortalWindow()">
+        <i class="fa-solid fa-globe"></i>
+        <span>Target Campus Portal</span>
+      </li>
+      <li class="nav-item" onclick="openSwaggerDocs()">
+        <i class="fa-solid fa-code"></i>
+        <span>FastAPI Docs (/docs)</span>
+      </li>
+    </ul>
+
+    <div class="google-badge-box">
+      <div class="google-badge-title">
+        <i class="fa-brands fa-google"></i> Google Stack Load-Bearing
+      </div>
+      <div class="google-tags">
+        <span class="tag tag-gemini">Gemini 2.0 API</span>
+        <span class="tag tag-cloudrun">Cloud Run</span>
+        <span class="tag tag-policy">Policy Gate</span>
+        <span class="tag tag-bigquery">BigQuery Memory</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <header class="header-bar">
+      <div class="header-title">
+        <h2>Autonomous Infrastructure Command Dashboard</h2>
+        <p>Closed-Loop: Detect → Plan → Safety Policy Gate → Act → Visual Verify → Memory</p>
+      </div>
+      <div class="status-indicator" id="status-indicator">
+        <div class="status-dot"></div>
+        <span class="status-text" id="status-text">100% Healthy (rev-0824-stable)</span>
+      </div>
+    </header>
+
+    <!-- Measured Metrics Strip -->
+    <div class="metrics-row">
+      <div class="metric-box">
+        <span class="metric-box-title">Detection Time</span>
+        <span class="metric-box-value" id="metric-detect">0.002s</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-box-title">Safety Gate Latency</span>
+        <span class="metric-box-value" id="metric-safety">0.001s</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-box-title">Visual DOM Assertion</span>
+        <span class="metric-box-value" id="metric-visual" style="color: var(--accent-emerald);">PASSED</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-box-title">Total Measured MTTR</span>
+        <span class="metric-box-value" id="metric-total">0.005s</span>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid-container">
+
+      <!-- Chaos Fault Injector -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-bug" style="color: var(--accent-rose);"></i> Chaos Fault Injector</h3>
+          <span class="tag tag-gemini">Live Demo Trigger</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">
+          Trigger real infrastructure failures. Watch Gemini Function Calling & Policy Gate remediate live.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <button class="btn-fault" onclick="injectFault('http_500')">
+            <span><i class="fa-solid fa-triangle-exclamation"></i> 1. Inject HTTP 500 Route Crash</span>
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <button class="btn-fault" onclick="injectFault('white_screen')">
+            <span><i class="fa-solid fa-eye-slash"></i> 2. Inject Silent "White Screen of Death"</span>
+            <i class="fa-solid fa-play"></i>
+          </button>
+        </div>
+        <button class="btn-primary" style="margin-top: 0.5rem;" onclick="runRemediation()">
+          <i class="fa-solid fa-robot"></i> Run Agentic Remediation Engine
+        </button>
+      </div>
+
+      <!-- BigQuery Verified Memory Explorer -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-database" style="color: var(--accent-purple);"></i> BigQuery Verified Incident Memory</h3>
+          <span class="tag tag-bigquery">Vector Search</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">
+          Stores verified successful resolutions. Similar future crashes retrieve policy-validated fixes.
+        </p>
+        <div id="memory-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto;">
+          <!-- Dynamic Memory Entries -->
+        </div>
+      </div>
+
+      <!-- Realtime Agent Terminal -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-title">
+            <i class="fa-solid fa-terminal" style="color: var(--primary);"></i> Gemini 2.0 Agentic Terminal Stream
+          </div>
+          <span class="tag tag-cloudrun">Cloud Run Logs</span>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div class="log-line">
+            <span class="log-time">[16:30:00]</span>
+            <span class="log-step">[SYSTEM]</span>
+            <span>Agentic-Campus Command Center Online. Connected to http://localhost:8000.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

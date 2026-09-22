@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic-Campus | Autonomous Self-Healing Infrastructure Agent</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <div class="logo-icon">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div class="logo-text">
+        <h1>Agentic-Campus</h1>
+        <p>Google Cloud Hack Sprint</p>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li class="nav-item active" onclick="switchTab('dashboard')">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>Control Center</span>
+      </li>
+      <li class="nav-item" onclick="switchTab('deck')">
+        <i class="fa-solid fa-file-powerpoint"></i>
+        <span>8-Slide Pitch Deck</span>
+      </li>
+      <li class="nav-item" onclick="switchTab('readme')">
+        <i class="fa-brands fa-github"></i>
+        <span>GitHub README</span>
+      </li>
+      <li class="nav-item" onclick="switchTab('script')">
+        <i class="fa-solid fa-video"></i>
+        <span>90s Demo Script</span>
+      </li>
+    </ul>
+
+    <div class="google-badge-box">
+      <div class="google-badge-title">
+        <i class="fa-brands fa-google"></i> Google Stack Load-Bearing
+      </div>
+      <div class="google-stack-tags">
+        <span class="tag tag-gemini">Gemini 2.0 API</span>
+        <span class="tag tag-cloudrun">Cloud Run</span>
+        <span class="tag tag-firebase">Firebase DB</span>
+        <span class="tag tag-bigquery">BigQuery</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Top Header Bar -->
+    <header class="header-bar">
+      <div class="header-title">
+        <h2>Infrastructure Control & Closed-Loop Agent</h2>
+        <p>Autonomous Plan → Act → Verify → Report Incident Lifecycle</p>
+      </div>
+      <div class="status-indicator" id="global-status">
+        <div class="status-dot"></div>
+        <span class="status-text" id="status-text">All Microservices Healthy</span>
+      </div>
+    </header>
+
+    <!-- Dashboard Content Grid -->
+    <div class="dashboard-grid">
+
+      <!-- Fault Injection Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-bug"></i> Chaos Fault Injector (Presentation Mode)</h3>
+          <span class="tag tag-gemini">Demo Trigger</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Trigger artificial production outages live during demo. Watch Gemini 2.0 automatically remediate the failure.
+        </p>
+        <div class="fault-buttons">
+          <button class="btn-fault" onclick="triggerFault('oom')">
+            <span><i class="fa-solid fa-memory"></i> 1. OOM Heap Leak (Grading API)</span>
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <button class="btn-fault" onclick="triggerFault('route')">
+            <span><i class="fa-solid fa-triangle-exclamation"></i> 2. HTTP 500 Route Failure (Auth Service)</span>
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <button class="btn-fault" onclick="triggerFault('db')">
+            <span><i class="fa-solid fa-database"></i> 3. Connection Pool Spike (Portal DB)</span>
+            <i class="fa-solid fa-play"></i>
+          </button>
+        </div>
+        <button class="btn-reset" onclick="resetInfrastructure()">
+          <i class="fa-solid fa-rotate"></i> Reset Infrastructure Health
+        </button>
+      </div>
+
+      <!-- Cloud Run Services Monitor Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-server"></i> Cloud Run Microservices Status</h3>
+          <span class="tag tag-cloudrun">Cloud Run</span>
+        </div>
+        <div class="service-list">
+          <div class="service-item" id="service-grading">
+            <div class="service-info">
+              <i class="fa-solid fa-graduation-cap" style="color: var(--accent-cyan);"></i>
+              <div>
+                <div class="service-name">grading-service-v2</div>
+                <div class="service-url">grading-api-x9a8-uc.a.run.app</div>
+              </div>
+            </div>
+            <span class="service-badge badge-healthy" id="badge-grading">100% Healthy</span>
+          </div>
+
+          <div class="service-item" id="service-auth">
+            <div class="service-info">
+              <i class="fa-solid fa-key" style="color: var(--accent-purple);"></i>
+              <div>
+                <div class="service-name">auth-identity-provider</div>
+                <div class="service-url">auth-service-k2j1-uc.a.run.app</div>
+              </div>
+            </div>
+            <span class="service-badge badge-healthy" id="badge-auth">100% Healthy</span>
+          </div>
+
+          <div class="service-item" id="service-db">
+            <div class="service-info">
+              <i class="fa-solid fa-database" style="color: var(--accent-amber);"></i>
+              <div>
+                <div class="service-name">campus-db-cluster</div>
+                <div class="service-url">db-primary-m7n3-uc.a.run.app</div>
+              </div>
+            </div>
+            <span class="service-badge badge-healthy" id="badge-db">100% Healthy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Output Box -->
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div class="terminal-title">Gemini 2.0 Agent Terminal (Plan → Act → Verify → Report)</div>
+          <div style="font-size: 0.75rem; color: var(--accent-cyan); font-family: var(--font-mono);">
+            <i class="fa-solid fa-bolt"></i> Agent Active
+          </div>
+        </div>
+        <div class="terminal-body" id="terminal-logs">
+          <div class="log-line">
+            <span class="log-timestamp">[15:45:00]</span>
+            <span class="log-step">[SYSTEM]</span>
+            <span>Agentic-Campus Autonomous Engine Initialized. Listening for Cloud Run telemetry telemetry.</span>
+          </div>
+          <div class="log-line">
+            <span class="log-timestamp">[15:45:01]</span>
+            <span class="log-step">[MONITOR]</span>
+            <span>Connected to Firebase Realtime DB & Cloud Run telemetry metrics stream. Zero active incidents.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screenshot Multimodal Verification Card -->
+      <div class="verification-box">
+        <div class="preview-container">
+          <div class="preview-badge" id="preview-badge">VERIFICATION: STANDBY</div>
+          <canvas id="screenshot-canvas" width="380" height="200" style="display: none;"></canvas>
+          <div class="preview-canvas-placeholder" id="preview-placeholder">
+            <i class="fa-solid fa-eye" style="font-size: 2.5rem; color: var(--text-dim);"></i>
+            <p style="font-size: 0.8rem;">Multimodal Visual Screenshot Verifier</p>
+            <span style="font-size: 0.7rem; color: var(--text-dim);">Captures live UI state after remediation act</span>
+          </div>
+        </div>
+
+        <div class="verification-details">
+          <h3><i class="fa-solid fa-shield-halved" style="color: var(--accent-emerald);"></i> Closed-Loop Verification</h3>
+          <div class="metric-row">
+            <span class="metric-label">Agentic Plan Confidence:</span>
+            <span class="metric-val" id="val-confidence">100%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Remediation Action:</span>
+            <span class="metric-val" id="val-action">None Required</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Visual Health Verification:</span>
+            <span class="metric-val" id="val-visual" style="color: var(--accent-emerald);">PASS (200 OK)</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">MTTR (Mean Time to Repair):</span>
+            <span class="metric-val" id="val-mttr">0.0s</span>
+          </div>
+
+          <button class="btn-primary" onclick="generatePostMortem()">
+            <i class="fa-solid fa-file-pdf"></i> View Incident Post-Mortem Report
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal for Deck, README, and Scripts -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Submission Asset Viewer</h3>
+        <button class="btn-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Dynamic Content Injected Here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
